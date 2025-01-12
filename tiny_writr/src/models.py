@@ -45,15 +45,25 @@ class BigramModel(Model):
     def forward(
         self, idx: torch.Tensor, targets: Optional[torch.Tensor] = None
     ) -> tuple[torch.Tensor, torch.Tensor]:
-        logits = self.logits[idx]
+        batch_logits = self.logits[idx]
 
         loss: Optional[torch.Tensor] = None
 
         if targets is not None:
+            # The loss is defined as the cross-entropy loss between the logits and the targets
+            # Notes on tensor shapes:
+            # - logits: (vocab_size, vocab_size)
+            # - batch_logits: (batch_size, vocab_size)
+            # - logits.view(-1, logits.size(-1)): (batch, vocab_size)
+            # - targets: (batch_size)
+            # softmax is applied on each row of the logits (to ensure that the sum of the row is 1)
+
             loss = F.cross_entropy(
-                logits.view(-1, logits.size(-1)), targets.view(-1), ignore_index=-1
+                batch_logits.view(-1, batch_logits.size(-1)),
+                targets.view(-1),
+                ignore_index=-1,
             )
-        return logits, loss
+        return batch_logits, loss
 
     def backward(self, x):
         # No backward pass needed for this model
