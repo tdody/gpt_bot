@@ -36,10 +36,20 @@ def __clean_word(word: str) -> str:
     return word
 
 
-def create_datasets(file_path: str):
+def create_datasets(file_path: str) -> tuple[ContentDataset, ContentDataset]:
+    """ "
+    Create the training and testing datasets.
+
+    Args:
+        file_path (str): The path to the file containing the dataset.
+
+    Returns:
+        tuple[ContentDataset, ContentDataset]: The training and testing datasets.
+    """
     with open(file_path, "r") as file:
         content = file.read()
 
+    # Split the content into words and normalize them
     words = content.splitlines()
     words = [__clean_word(word) for word in words]
     words = [w for w in words if w]

@@ -8,7 +8,6 @@ or even name a new bird. TINY_WRITR will help you generate a list of content tha
 
 import argparse
 
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Tiny Writr is a module that allows the user to find more inspiration from a list of content."
